@@ -286,12 +286,19 @@ body {
 
 /* Tela de Visualização - Carrossel */
 .carousel-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "content content"
+        "prev next";
     gap: var(--spacing-md);
+    align-items: center;
+    justify-items: center;
     position: relative;
-    min-height: 400px;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .carousel-nav {
@@ -309,6 +316,16 @@ body {
     flex-shrink: 0;
 }
 
+.carousel-nav.prev {
+    grid-area: prev;
+    justify-self: end;
+}
+
+.carousel-nav.next {
+    grid-area: next;
+    justify-self: start;
+}
+
 .carousel-nav:hover:not(:disabled) {
     background: var(--primary-color);
     border-color: var(--primary-color);
@@ -323,17 +340,18 @@ body {
 }
 
 .carousel-content {
-    flex: 1;
+    grid-area: content;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
     display: flex;
-    align-items: center;
+    align-items: safe center;
     justify-content: center;
-    min-height: 400px;
     background: var(--surface-alt);
     border-radius: 1rem;
     border: 2px solid var(--border-color);
     padding: var(--spacing-xl);
     position: relative;
-    overflow: hidden;
 }
 
 .note-card {
@@ -376,9 +394,13 @@ body {
 
 .note-content img {
     max-width: 100%;
+    max-height: 50vh;
+    width: auto;
     height: auto;
+    object-fit: contain;
+    display: block;
+    margin: var(--spacing-md) auto;
     border-radius: 0.5rem;
-    margin: var(--spacing-md) 0;
     box-shadow: var(--shadow-sm);
 }
 
@@ -396,6 +418,7 @@ body {
     gap: var(--spacing-sm);
     margin-top: var(--spacing-lg);
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .indicator {
@@ -937,20 +960,12 @@ body {
         min-width: 100%;
     }
     
-    .carousel-container {
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-    
     .carousel-nav {
-        order: 2;
         width: 2.5rem;
         height: 2.5rem;
     }
-    
+
     .carousel-content {
-        order: 1;
-        min-height: 300px;
         padding: var(--spacing-lg);
     }
     
