@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memórias Positivas — Offline</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        .box { max-width: 400px; }
+        h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+        p { line-height: 1.6; opacity: 0.9; margin-bottom: 1.5rem; }
+        button {
+            background: white;
+            color: #4f46e5;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Você está sem conexão</h1>
+        <p>
+            Esta é a primeira vez que o app abre neste dispositivo sem internet, então ainda não há
+            uma cópia local pronta para uso offline. Conecte-se uma vez para carregar o aplicativo —
+            depois disso, ele funcionará normalmente mesmo sem conexão.
+        </p>
+        <button onclick="location.reload()">Tentar novamente</button>
+    </div>
+</body>
+</html>
