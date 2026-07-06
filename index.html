@@ -80,7 +80,6 @@
                     <div class="date-field">
                         <label for="noteDate" class="sr-only">Data da memória</label>
                         <input type="date" id="noteDate" class="date-input" aria-describedby="dateHelp">
-                        <div class="date-display" id="dateDisplay"></div>
                         <span id="dateHelp" class="sr-only">Selecione a data desta memória</span>
                     </div>
                     
@@ -99,13 +98,8 @@
                         <p>Escreva sua memória positiva aqui...</p>
                     </div>
                     <span id="editorHelp" class="sr-only">Editor de texto rico. Você pode formatar o texto e adicionar imagens</span>
-                </div>
 
-                <div class="autosave-row">
-                    <span id="autosaveIndicator" class="autosave-indicator"></span>
-                </div>
-                
-                <div class="editor-toolbar">
+                    <div class="editor-toolbar">
                     <button type="button" class="toolbar-btn" data-command="bold" aria-label="Negrito" title="Negrito">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
@@ -133,7 +127,19 @@
                             <polyline points="21,15 16,10 5,21"></polyline>
                         </svg>
                     </button>
+                    <div class="toolbar-emoji-wrapper">
+                        <button type="button" class="toolbar-btn" id="insertEmojiBtn" aria-label="Inserir emoji" title="Inserir emoji" aria-haspopup="true" aria-expanded="false">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </button>
+                        <div class="emoji-picker" id="emojiPicker" hidden></div>
+                    </div>
                     <input type="file" id="imageInput" accept="image/*" style="display: none;" aria-label="Selecionar arquivo de imagem">
+                    </div>
                 </div>
                 
                 <div class="action-buttons">

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Progressive Web App (PWA) para criar e visualizar memórias positivas ao longo do ano, construído com **HTML, CSS e JavaScript puro** (sem frameworks, sem bundler, sem backend). A partir desta versão, o app foi reestruturado em módulos ES (JavaScript nativo) com armazenamento em **IndexedDB**, autosave estilo Google Docs, imagens desacopladas do texto das notas, e sincronização automática com um arquivo de backup real no dispositivo — com um fluxo alternativo de um toque para navegadores mobile, que não suportam esse recurso nativamente.
+Progressive Web App (PWA) para criar e visualizar memórias positivas ao longo do ano, construído com **HTML, CSS e JavaScript puro** (sem frameworks, sem bundler, sem backend). A partir desta versão, o app foi reestruturado em módulos ES (JavaScript nativo) com armazenamento em **IndexedDB**, imagens desacopladas do texto das notas, seletor de emoji no editor, e sincronização automática com um arquivo de backup real no dispositivo — com um fluxo alternativo de um toque para navegadores mobile, que não suportam esse recurso nativamente.
 
 ## Arquitetura de Arquivos
 
@@ -45,15 +45,13 @@ Agora as notas e imagens ficam no **IndexedDB**, banco `MemoryAppDB`, com quatro
 
 **Migração automática**: quem já usava a versão anterior tem suas notas migradas do `localStorage` para o IndexedDB automaticamente, na primeira abertura desta versão — incluindo a extração de imagens base64 embutidas para o novo formato desacoplado. A migração roda uma única vez (controlada por uma flag em `settings`) e não apaga o `localStorage` antigo, apenas para de usá-lo.
 
-## Autosave (estilo Google Docs)
+## Salvamento explícito e seletor de emoji
 
-Enquanto o usuário digita na tela de criação/edição, o app salva automaticamente no IndexedDB após ~800ms sem digitação (debounce), sem precisar clicar em nada. O botão antigo "Salvar Memória" virou **"Salvar Agora"**: continua existindo, mas agora serve para confirmar/finalizar imediatamente e voltar à tela de visualização, em vez de ser a única forma de persistir o texto.
+Notas só são gravadas no IndexedDB quando a pessoa clica em **"Salvar Agora"** — não existe salvamento automático enquanto se digita. Isso evita salvar estados incompletos (ex: só uma imagem inserida, sem revisar o texto ainda) e deixa o botão **Cancelar** simples e previsível: como nada foi persistido durante a edição, cancelar só descarta as imagens inseridas nesta sessão que ainda não foram salvas (evitando "imagens órfãs" no banco).
 
-Comportamento do botão **Cancelar**, adaptado a essa mudança:
-- Se você estava **editando uma nota já existente**: qualquer alteração que o autosave já tenha gravado é revertida, restaurando a versão original de antes de abrir o editor (inclusive limpando imagens novas que não estavam na versão original).
-- Se era uma **nota nova** (ainda não confirmada com "Salvar Agora"): o rascunho autosalvo é descartado.
+O placeholder do editor ("Escreva sua memória positiva aqui...") é puramente visual, via CSS (`:empty::before`) — nunca é inserido como texto real, então inserir uma imagem antes de escrever qualquer coisa não deixa mais o texto de exemplo "grudado" na nota salva.
 
-Tecnicamente, o autosave nunca reescreve o HTML do editor em uso (`contenteditable`) — ele só lê o conteúdo atual para uma string separada antes de gravar, então a posição do cursor nunca é afetada durante a digitação.
+O editor também tem um seletor de emoji (ícone de carinha na barra de ferramentas), com uma seleção de emojis organizados por categoria (rostos, corações, celebração, natureza), inseridos diretamente na posição do cursor.
 
 ## Imagens desacopladas do texto
 
@@ -67,7 +65,7 @@ Isso deixa o banco muito mais leve e a navegação entre memórias mais rápida,
 
 **Desktop (Chrome/Edge):** ao vincular um arquivo pela primeira vez (menu Backup → "Criar Novo Arquivo" ou "Vincular Arquivo Existente"), a referência fica salva no IndexedDB. A partir daí:
 - **Ao abrir o app**: verifica silenciosamente (sem nenhum clique) se há um arquivo vinculado com permissão concedida, lê o conteúdo e mescla com as notas locais (a versão mais recente de cada nota, por `updatedAt`, prevalece).
-- **A cada alteração** (autosave, exclusão, importação manual): agenda uma gravação automática no arquivo (debounce de 1,5s).
+- **A cada alteração salva** (criar/editar via "Salvar Agora", excluir, importação manual): agenda uma gravação automática no arquivo (debounce de 1,5s).
 - **Ao fechar a aba, minimizar ou trocar de app**: os eventos `visibilitychange`/`pagehide` forçam a gravação imediata de qualquer alteração pendente.
 
 **Mobile e outros navegadores (Firefox, Safari/iOS, a maioria do Android):** a File System Access API não existe nesses ambientes — nenhum site consegue ler/escrever num arquivo do sistema sem uma ação explícita do usuário a cada vez, em nenhum navegador. Para esses casos, existe o **botão de sincronização rápida no header** (ícone 🔄): em um único toque, ele abre o seletor de arquivo, mescla o conteúdo escolhido com as notas locais e baixa automaticamente uma versão atualizada do backup. Guardar esse arquivo numa pasta de nuvem (Google Drive, iCloud Drive) permite que ele "viaje" entre aparelhos ao repetir esse toque em cada um.
@@ -87,9 +85,9 @@ Na primeira execução, se o navegador suportar a File System Access API, o app 
 
 ### Tela de Criação/Edição
 - Data em formato de carta em português (ex: "17 de Setembro de 2025")
-- Campo de cidade/estado, editor rich text (negrito, itálico, sublinhado), inserção de imagens
-- **Autosave** com indicador de status ("Salvando...", "Salvo automaticamente às HH:MM")
-- Botões "Salvar Agora", "Excluir" e "Cancelar" (semântica de cancelamento ajustada ao autosave)
+- Campo de cidade/estado, editor rich text (negrito, itálico, sublinhado, emoji), inserção de imagens
+- Salvamento explícito via **"Salvar Agora"** (sem gravação automática enquanto digita)
+- Botões "Salvar Agora", "Excluir" e "Cancelar"
 
 ### Tela de Anos Anteriores
 - Lista de anos com contagem de memórias, navegação direta para o ano selecionado

@@ -279,29 +279,6 @@ body {
     min-height: auto;
 }
 
-/* Indicador de autosave (tela de criação/edição) */
-.autosave-row {
-    min-height: 1.25rem;
-    margin-bottom: var(--spacing-sm);
-}
-
-.autosave-indicator {
-    font-size: var(--font-size-xs);
-    color: var(--text-muted);
-}
-
-.autosave-indicator--saving {
-    color: var(--primary-color);
-}
-
-.autosave-indicator--saved {
-    color: var(--success-color);
-}
-
-.autosave-indicator--unsaved {
-    color: var(--warning-color);
-}
-
 /* Área de conteúdo principal */
 .content-area {
     flex: 1;
@@ -531,14 +508,6 @@ body {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.date-display {
-    margin-top: var(--spacing-sm);
-    font-size: var(--font-size-lg);
-    font-weight: 500;
-    color: var(--primary-color);
-    min-height: 1.5rem;
-}
-
 .editor-container {
     flex: 1;
     display: flex;
@@ -550,7 +519,8 @@ body {
     flex: 1;
     min-height: 300px;
     border: 2px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-bottom: none;
+    border-radius: 0.5rem 0.5rem 0 0;
     padding: var(--spacing-lg);
     font-size: var(--font-size-base);
     line-height: 1.6;
@@ -625,8 +595,52 @@ body {
 
 .toolbar-separator {
     width: 1px;
+    align-self: stretch;
+    flex-shrink: 0;
     background: var(--border-color);
     margin: 0 var(--spacing-xs);
+}
+
+.toolbar-emoji-wrapper {
+    position: relative;
+    display: inline-flex;
+}
+
+.emoji-picker {
+    position: absolute;
+    top: calc(100% + var(--spacing-xs));
+    left: 0;
+    z-index: 50;
+    width: 16rem;
+    max-height: 14rem;
+    overflow-y: auto;
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-sm);
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.15rem;
+}
+
+.emoji-picker[hidden] {
+    display: none;
+}
+
+.emoji-picker-btn {
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0.35rem 0;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.emoji-picker-btn:hover {
+    background: var(--surface-alt);
 }
 
 .action-buttons {
