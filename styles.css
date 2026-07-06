@@ -264,6 +264,10 @@ body {
     text-align: center;
 }
 
+.update-banner[hidden] {
+    display: none;
+}
+
 .update-banner-actions {
     display: flex;
     gap: var(--spacing-sm);
